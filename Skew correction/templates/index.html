@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image for Skew Correction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            animation: slideIn 1s ease;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            animation: fadeIn 1.5s ease;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        button {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: #1a59c9;
+            transform: scale(1.1);
+        }
+
+        .color-picker-wrapper {
+            margin-top: 30px;
+        }
+
+        .color-picker {
+            animation: fadeIn 2s ease;
+        }
+
+        .color-picker input {
+            display: none;
+        }
+
+        .color-picker label {
+            background: #2575fc;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .color-picker label:hover {
+            background: #1a59c9;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Decorative Animations */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .decorative-circle:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .decorative-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            right: 25%;
+            animation-delay: 2s;
+        }
+
+        .decorative-circle:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="decorative-circle"></div>
+    <div class="decorative-circle"></div>
+    <div class="decorative-circle"></div>
+    <h1>Upload Image for Skew Correction</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div class="color-picker-wrapper">
+        <div class="color-picker">
+            <input type="color" id="background-color" value="#2575fc">
+            <label for="background-color">Change Background Color</label>
+        </div>
+    </div>
+
+    <script>
+        const colorPicker = document.getElementById('background-color');
+        colorPicker.addEventListener('input', (event) => {
+            document.body.style.background = event.target.value;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skew Correction Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #2575fc, #6a11cb);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .top-right a {
+            text-decoration: none;
+            background: #1a59c9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .top-right a:hover {
+            background: #113f8f;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            width: 90%;
+        }
+
+        .image-container div {
+            text-align: center;
+            cursor: pointer;
+            flex: 1 1 40%;
+            max-width: 40%;
+        }
+
+        .image-container img {
+            width: 100%;
+            max-height: 200px; /* Smaller images on display */
+            border: 5px solid white;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .color-picker-wrapper {
+            margin-top: 20px;
+        }
+
+        .color-picker input {
+            display: none;
+        }
+
+        .color-picker label {
+            background: #2575fc;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .color-picker label:hover {
+            background: #1a59c9;
+            transform: scale(1.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal img {
+            max-width: 150%; /* Enlarged image size */
+            max-height: 150%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .modal .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: black;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal .close-btn:hover {
+            background: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-right">
+        <a href="/">Upload Another Image</a>
+    </div>
+
+    <h1>Skew Correction Results</h1>
+    <div class="image-container">
+        <div onclick="showModal('original')">
+            <h3>Original Image</h3>
+            <img src="{{ url_for('uploaded_file', filename=original) }}" alt="Original Image">
+        </div>
+        <div onclick="showModal('corrected')">
+            <h3>Corrected Image</h3>
+            <img src="{{ url_for('uploaded_file', filename=corrected) }}" alt="Corrected Image">
+        </div>
+    </div>
+
+    <div class="color-picker-wrapper">
+        <div class="color-picker">
+            <input type="color" id="background-color" value="#2575fc">
+            <label for="background-color">Change Background Color</label>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="image-modal">
+        <div class="close-btn" onclick="closeModal()">×</div>
+        <img id="modal-image" src="" alt="Enlarged Image">
+    </div>
+
+    <script>
+        const colorPicker = document.getElementById('background-color');
+        const modal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+
+        // Change Background Color
+        colorPicker.addEventListener('input', (event) => {
+            document.body.style.background = event.target.value;
+        });
+
+        // Show Modal with Enlarged Image
+        function showModal(type) {
+            const imgSrc = type === 'original' 
+                ? "{{ url_for('uploaded_file', filename=original) }}" 
+                : "{{ url_for('uploaded_file', filename=corrected) }}";
+            modalImage.src = imgSrc;
+            modal.classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Zoom functionality
+        let zoomLevel = 1;
+        modalImage.addEventListener('wheel', (e) => {
+            e.preventDefault();  // Prevent default scroll behavior
+
+            // Zoom in or zoom out based on scroll direction
+            if (e.deltaY < 0) {
+                zoomLevel *= 1.1; // Zoom in
+            } else {
+                zoomLevel *= 0.9; // Zoom out
+            }
+
+            // Apply zoom
+            modalImage.style.transform = `scale(${zoomLevel})`;
+        });
+    </script>
+</body>
+</html>
